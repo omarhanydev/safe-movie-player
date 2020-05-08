@@ -1,0 +1,35 @@
+{
+  "name": "safe-movie-player",
+  "productName": "Safe Movie Player",
+  "version": "1.0.0",
+  "appVersion": "1.0.0",
+  "description": "Safe Movie Player allows you to watch edited movies by applying scene skip list (.safe file) easily without converting or rendering the original movie file.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron src/index.js",
+    "dist": "electron-builder"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^7.1.7",
+    "electron-builder": "^22.6.0",
+    "electron-reload": "^1.5.0"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "plyr": "^3.6.2",
+    "srt-to-vtt": "^1.1.3"
+  },
+  "build" : {
+    "appId": "com.safemovieplayer.app",
+    "productName": "Safe Movie Player",
+    "target": "NSIS",
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
+  }
+}

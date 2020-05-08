@@ -1,0 +1,102 @@
+html{
+    overflow-y: auto !important;
+}
+
+body {
+    color: rgb(61, 61, 61);
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+    background-image: url(images/bg.svg);
+    background-position: center right;
+    background-repeat: no-repeat;
+    background-size: 45% auto;
+    height: 100vh;
+    position: relative;
+    align-items: center;
+}
+
+.uk-text-danger{
+    color: #DE0418 !important;
+    font-weight: 700;
+}
+
+.uk-h1, .uk-h2, .uk-h3, .uk-h4, .uk-h5, .uk-h6, .uk-heading-2xlarge, .uk-heading-large, .uk-heading-medium, .uk-heading-small, .uk-heading-xlarge, h2, h3, h4, h5, h6{
+    font-family: 'Yanone Kaffeesatz', sans-serif !important;
+}
+
+.title{
+    display: flex;
+    align-items: center;
+}
+
+.title img{
+    margin-left: 20px;
+}
+
+.btn.uk-button.uk-button-secondary{
+    background: #333;
+    color: #fff;
+    /*padding: 15px 35px;*/
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s all;
+    font-size: 22px !important;
+}
+
+.btn.uk-button.uk-button-secondary:hover{
+    background: #333 !important;
+    transform: scale(1.05);
+}
+
+.plyr__caption {
+    font-size: 36px;
+}
+
+.plyr--video {
+    height: 100vh !important;
+}
+
+.table-editable {
+    position: relative;
+}
+
+.hide{
+    display: none;
+}
+
+.table-remove {
+    cursor: pointer;
+    transition: 0.3s all;
+}
+
+.table-remove:hover {
+    transform: scale(1.05);
+}
+
+.table-add {
+    color: #070;
+    transition: 0.3s all;
+    cursor: pointer;
+}
+.table-add:hover {
+    color: #0b0;
+    transform: scale(1.05);
+}
+
+.about{
+    position: absolute;
+    bottom: 35px;
+    left: 35px;
+    background: none;
+    border: none;
+    color: #999999;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.about:hover{
+    color: #222222;
+}

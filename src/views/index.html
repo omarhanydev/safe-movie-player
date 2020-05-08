@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../public/uikit.min.css" />
+    <link rel="stylesheet" href="../public/main.css" type="text/css" />
+    <script src="../public/uikit.min.js"></script>
+    <script src="../public/uikit-icons.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.2/plyr.css" />
+    <title>Safe Movie Player</title>
+    <script>
+        const { shell } = require('electron');
+    </script>
+</head>
+<body class="uk-flex">
+<div id="app">
+    <button class="about" onclick="shell.openExternal('https://omarrhanyy.github.io/safe-movie-player/')">https://omarrhanyy.github.io/safe-movie-player/</button>
+    <div class="uk-section">
+        <div class="uk-container">
+
+            <h1 class="uk-flex uk-flex-middle title uk-text-danger uk-text-italic">
+                Watch All Movies Safely
+                <img src="../public/images/logo.svg" width="80" alt="">
+            </h1>
+
+            <h2 class="subtitle uk-margin-remove-top uk-margin-medium-bottom uk-text-light">
+                Safe Movie Player allows you to watch edited movies<br>
+                by applying scene skip list (.safe file) easily without<br>
+                converting or rendering the original movie file.
+            </h2>
+
+            <div>
+                <button class="btn uk-button uk-button-secondary uk-button-large" uk-tooltip="title: Create a new .safe file contains cut scenes timings; pos: bottom" id="addBtn" uk-toggle="target: #addNewCuts" type="button">Cut Scenes</button>
+                <button class="btn uk-button uk-button-secondary uk-button-large uk-margin-left" uk-tooltip="title: Play a Movie with .srt subtitle file and .safe file.; pos: bottom" id="selectBtn" type="button">Play Safe Movie</button>
+            </div>
+
+            <div id="addNewCuts" class="uk-modal-full" uk-modal>
+                <div class="uk-modal-dialog">
+                    <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+                    <div class="uk-grid-collapse uk-child-width-1-2@s uk-flex-middle" uk-grid>
+                        <div id="cutPlayerWrap" uk-height-viewport>
+
+                        </div>
+                        <div class="uk-padding-large" id="cutTableWrap">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<script src="../public/functions.js"></script>
+
+</body>
+</html>

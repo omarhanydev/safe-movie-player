@@ -1,0 +1,10 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.safemovieplayer.app
+productName: Safe Movie Player
+target: NSIS
+nsis:
+  allowToChangeInstallationDirectory: true
+  oneClick: false
+electronVersion: 7.2.4
