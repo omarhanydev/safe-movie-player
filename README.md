@@ -12,4 +12,4 @@
 3- Get some popcorn and Enjoy the movie with your family/friends!.
 
 ### Download
-[Soon.](#)
+[Download Windows Installer.](https://github.com/omarrhanyy/safe-movie-player/raw/master/dist/Safe%20Movie%20Player%20Setup%201.0.0.exe)
