@@ -138,6 +138,7 @@ document.querySelector('#selectBtn').addEventListener('click', function (event) 
                 const player = new Plyr('#player', {
                     captions: { active: true, language: 'ar', update: false },
                     volume: 1,
+                    invertTime: false,
                     controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'airplay', 'fullscreen']
                 });
 
@@ -192,7 +193,14 @@ document.querySelector('#addBtn').addEventListener('click', function (event) {
         fileName = fileName.substr(0, pos < 0 ? fileName.length : pos) + ".safe";
 
         document.querySelector('#cutTableWrap').innerHTML = `
-        <h1>Scenes Table</h1>
+        <h1>Cut Scenes</h1>
+        <small>
+            <ul>
+                <li>Please add unsuitable scenes start and end time, you can also add more than one scene.</li>
+                <li>After adding scene timings, click <strong>"Save as file"</strong> button to save a ".safe" file in the same folder of movie</li>
+                <li>Click <strong>“Play Safe Movie”</strong> button to choose the movie safely using the exported ".safe" file.</li>
+            </ul>
+        </small>
     <div class="uk-clearfix">
         <div class="uk-float-right">
             <div class="table-add">
@@ -239,6 +247,10 @@ document.querySelector('#addBtn').addEventListener('click', function (event) {
 
         document.querySelector('.table-add').addEventListener('click', function (event) {
             cloneRow();
+        });
+
+        document.querySelector('.uk-modal-close-full').addEventListener('click', function (event) {
+            cutPlayer.pause();
         });
 
         document.getElementById('export-btn').addEventListener('click', function (event) {
