@@ -1,7 +1,6 @@
 const {app, BrowserWindow, Menu } = require("electron");
 const url = require("url");
 const path = require("path");
-const VNudity = require('vnudity');
 let mainWin;
 let addWin;
 
@@ -20,7 +19,7 @@ const createWindow = () => {
             nodeIntegration: true
         },
         width: 1200,
-        height: 600,
+        height: 680,
         // frame: false,
         backgroundColor: "#ffffff",
         icon: path.join(__dirname, "public/images/logo.png")

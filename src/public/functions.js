@@ -9,6 +9,8 @@ let cutUrl = '';
 let jsonData = [];
 let cutPlayer;
 let fileNameOld, fileName, pos;
+let autoCut;
+let autoCutSens;
 
 function hmsToSecondsOnly(str) {
     var p = str.split(':'),
@@ -95,6 +97,15 @@ function readTextFile(file, callback) {
     rawFile.send(null);
 }
 
+
+document.getElementById('autoCutCheckbox').addEventListener('change', function (event) {
+    if(document.getElementById('autoCutCheckbox').checked){
+        document.getElementById('addBtn').classList.add('uk-opacity-50');
+    } else {
+        document.getElementById('addBtn').classList.remove('uk-opacity-50');
+    }
+});
+
 document.querySelector('#selectBtn').addEventListener('click', function (event) {
     dialog.showOpenDialog({
         properties: ['openFile'],
@@ -102,7 +113,8 @@ document.querySelector('#selectBtn').addEventListener('click', function (event) 
             extensions: ['mkv', 'avi', 'mp4', 'mov', 'm4v', 'rmvb', 'mpg', 'mpeg']}]
     }).then((data) => {
         vidUrl = data.filePaths[0];
-
+        autoCut = document.getElementById('autoCutCheckbox').checked;
+        autoCutSens = parseInt(document.getElementById('autoCutInput').value);
         dialog.showOpenDialog({
             properties: ['openFile'],
             filters: [{name: 'Subtitles',
@@ -115,18 +127,10 @@ document.querySelector('#selectBtn').addEventListener('click', function (event) 
                     .pipe(fs.createWriteStream(subUrl.replace('.srt', '.vtt')));
                 subUrl = subUrl.replace('.srt', '.vtt');
             }
-            dialog.showOpenDialog({
-                properties: ['openFile'],
-                filters: [{name: 'Safe Files',
-                    extensions: ['safe']}]
-            }).then((data) => {
-                cutUrl = data.filePaths[0];
-                readTextFile(cutUrl, function(text){
-                    jsonData = JSON.parse(text);
-                });
+            if(autoCut){
                 var $vid = document.createElement('div');
                 $vid.innerHTML = `
-        <video id="player" playsinline controls>
+        <video id="player"  width="500" height="300" autoplay playsinline controls>
             <source src="${vidUrl}" type="video/mp4" />
             <track kind="captions" label="Subtitle" src="${subUrl}" srclang="ar" default />
         </video>
@@ -134,6 +138,8 @@ document.querySelector('#selectBtn').addEventListener('click', function (event) 
                 document.body.classList.remove('uk-flex');
                 document.querySelector('#app').innerHTML = '';
                 document.body.appendChild($vid);
+                let count = 0;
+                let timeout;
 
                 const player = new Plyr('#player', {
                     captions: { active: true, language: 'ar', update: false },
@@ -142,20 +148,83 @@ document.querySelector('#selectBtn').addEventListener('click', function (event) 
                     controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'airplay', 'fullscreen']
                 });
 
+                player.on("playing", event => {
+                    clearTimeout(timeout);
+                    if (event.type === "playing") {
+                        timeout = setInterval(function() {
+                            count = 0;
+                            // console.log("count cleared", count);
+                        }, 5000)
+                    }
+                });
+
                 player.on('timeupdate', event => {
                     let instance = event.detail.plyr;
-                    let currentTime = instance.currentTime;
-                    jsonData.forEach((item) => {
-                        if (currentTime > hmsToSecondsOnly(item.starttime) && currentTime < hmsToSecondsOnly(item.endtime)) {
-                            instance.currentTime = hmsToSecondsOnly(item.endtime);
+                    nude.load('player');
+                    nude.scan(function(result){
+                        if(result){
+                            if(count<=autoCutSens){
+                                count++;
+                            }
+                            if(count>autoCutSens){
+                                count = 0;
+                                instance.currentTime = instance.currentTime + 45;
+                                document.getElementById('player').style.opacity = "0";
+                                instance.volume = 0;
+                            }
+                        } else {
+                            if(document.getElementById('player').style.opacity === "0"){
+                                setTimeout(function () {
+                                    document.getElementById('player').style.opacity = "1";
+                                    instance.volume = 1;
+                                    count = 0;
+                                }, 10000);
+                            }
                         }
                     });
                 });
+            } else {
+                dialog.showOpenDialog({
+                    properties: ['openFile'],
+                    filters: [{name: 'Safe Files',
+                        extensions: ['safe']}]
+                }).then((data) => {
+                    cutUrl = data.filePaths[0];
+                    readTextFile(cutUrl, function(text){
+                        jsonData = JSON.parse(text);
+                    });
+                    var $vid = document.createElement('div');
+                    $vid.innerHTML = `
+        <video id="player"  width="500" height="300" autoplay playsinline controls>
+            <source src="${vidUrl}" type="video/mp4" />
+            <track kind="captions" label="Subtitle" src="${subUrl}" srclang="ar" default />
+        </video>
+        `;
+                    document.body.classList.remove('uk-flex');
+                    document.querySelector('#app').innerHTML = '';
+                    document.body.appendChild($vid);
 
-                // document.querySelector('#selectBtn').style.display = "none";
-            } , reason => {
-                console.log(reason);
-            });
+                    const player = new Plyr('#player', {
+                        captions: { active: true, language: 'ar', update: false },
+                        volume: 1,
+                        invertTime: false,
+                        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'airplay', 'fullscreen']
+                    });
+
+                    player.on('timeupdate', event => {
+                        let instance = event.detail.plyr;
+                        let currentTime = instance.currentTime;
+                        jsonData.forEach((item) => {
+                            if (currentTime > hmsToSecondsOnly(item.starttime) && currentTime < hmsToSecondsOnly(item.endtime)) {
+                                instance.currentTime = hmsToSecondsOnly(item.endtime);
+                            }
+                        });
+                    });
+
+                } , reason => {
+                    console.log(reason);
+                });
+            }
         } , reason => {
             console.log(reason);
         });
@@ -266,6 +335,8 @@ document.querySelector('#addBtn').addEventListener('click', function (event) {
                 console.log(data);
                 fs.writeFileSync(data.filePath, JSON.stringify(tableToJson(document.getElementById('table'))), 'utf-8');
                 UIkit.modal('#addNewCuts').hide();
+                cutPlayer.pause();
+                document.getElementById('autoCutCheckbox').checked = false;
             }, reason => {
                 console.log(reason);
             });

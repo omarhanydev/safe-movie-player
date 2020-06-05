@@ -17,6 +17,7 @@
 </head>
 <body class="uk-flex">
 <div id="app">
+<!--    <img src="../public/images/8.png" alt="" style="opacity: 0" id="testImage">-->
     <button class="about" onclick="shell.openExternal('https://omarrhanyy.github.io/safe-movie-player/')">https://omarrhanyy.github.io/safe-movie-player/</button>
     <div class="uk-section">
         <div class="uk-container">
@@ -36,8 +37,8 @@
                 <h4 class="uk-heading-line"><span>How to use:</span></h4>
                 <small>
                     <ol>
-                        <li>Create a new “.safe” file for your movie using <strong>“Cut Scenes”</strong> button.</li>
-                        <li>Watch your movie using the second button <strong>“Play Safe Movie”</strong>.</li>
+                        <li>Create a new “.safe” file for your movie using <strong>“Manual Cut File”</strong> button<br>or use Auto Cut Scenes feature.</li>
+                        <li>Watch your movie using the second button <strong>“Play Movie”</strong>.</li>
                         <li>Get some popcorn and Enjoy the movie with your family/friends!</li>
                     </ol>
                 </small>
@@ -45,8 +46,12 @@
             </div>
 
             <div>
-                <button class="btn uk-button uk-button-secondary uk-button-large" uk-tooltip="title: Create a new .safe file contains cut scenes timings; pos: bottom" id="addBtn" uk-toggle="target: #addNewCuts" type="button"><span uk-icon="icon: future; ratio: 1.5"></span> Cut Scenes</button>
-                <button class="btn uk-button uk-button-secondary uk-button-large uk-margin-left" uk-tooltip="title: Play a Movie with .srt subtitle file and .safe file.; pos: bottom" id="selectBtn" type="button"><span uk-icon="icon: play-circle; ratio: 1.5"></span> Play Safe Movie</button>
+                <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                    <label><input class="uk-checkbox" type="checkbox" checked id="autoCutCheckbox" uk-tooltip="title: Use Auto Cut Scenes feature without creating a .safe file for each movie.; pos: top"> Auto Cut Scenes</label>
+                    <label class="uk-margin-left"><small>Sensitivity (1-15):</small> <input class="uk-input uk-width-auto" id="autoCutInput" min="1" max="15" type="text" value="6"></label>
+                </div>
+                <button class="btn uk-button uk-button-secondary uk-opacity-50 uk-button-large uk-margin-right" uk-tooltip="title: Create a new .safe file contains cut scenes timings; pos: bottom" id="addBtn" uk-toggle="target: #addNewCuts" type="button"><span uk-icon="icon: future; ratio: 1.5"></span> Create Manual Cut File</button>
+                <button class="btn uk-button uk-button-secondary uk-button-large" uk-tooltip="title: Play a Movie with .srt subtitle file and .safe file or using Auto Cut Scenes feature; pos: bottom" id="selectBtn" type="button"><span uk-icon="icon: play-circle; ratio: 1.5"></span> Play Movie</button>
             </div>
 
             <div id="addNewCuts" class="uk-modal-full" uk-modal>
@@ -70,6 +75,7 @@
 </div>
 
 
+<script src="../public/nude.min.js"></script>
 <script src="../public/functions.js"></script>
 
 </body>

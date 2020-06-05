@@ -1,8 +1,8 @@
 {
   "name": "safe-movie-player",
   "productName": "Safe Movie Player",
-  "version": "1.0.0",
-  "appVersion": "1.0.0",
+  "version": "1.0.1",
+  "appVersion": "1.0.1",
   "description": "Safe Movie Player allows you to watch edited movies by applying scene skip list (.safe file) easily without converting or rendering the original movie file.",
   "main": "src/index.js",
   "scripts": {
@@ -11,14 +11,14 @@
     "dist": "electron-builder",
     "dist-all": "electron-builder -mwl",
     "dist-mac": "electron-builder build --mac --publish always",
-    "dist-linux": "electron-builder build --linux --publish always"
+    "dist-linux": "electron-builder --linux"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "electron": "^7.1.7",
-    "electron-builder": "^22.6.0",
+    "electron-builder": "^22.7.0",
     "electron-reload": "^1.5.0"
   },
   "dependencies": {
