@@ -1,3 +1,9 @@
+# Unpacked folders
+dist/win-unpacked
+dist/linux-unpacked
+dist/mac
+dist/mac-unpacked
+
 # Logs
 logs
 *.log
