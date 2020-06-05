@@ -14,6 +14,6 @@
 ### Download
 [Download Windows Installer.](https://github.com/omarrhanyy/safe-movie-player/raw/master/dist/Safe%20Movie%20Player%20Setup%201.0.1.exe)
 
-[Download Linux Installer.](#)
+[Download Linux Installer.](https://github.com/omarrhanyy/safe-movie-player/raw/master/dist/Safe%20Movie%20Player-1.0.1.AppImage)
 
-[Download Mac Installer.](#)
+[Download Mac Installer.](https://github.com/omarrhanyy/safe-movie-player/raw/master/dist/Safe%20Movie%20Player-1.0.1-mac.zip)
