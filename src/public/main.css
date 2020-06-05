@@ -22,6 +22,11 @@ body {
     font-weight: 700;
 }
 
+.uk-opacity-50{
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .uk-h1, .uk-h2, .uk-h3, .uk-h4, .uk-h5, .uk-h6, .uk-heading-2xlarge, .uk-heading-large, .uk-heading-medium, .uk-heading-small, .uk-heading-xlarge, h2, h3, h4, h5, h6{
     font-family: 'Yanone Kaffeesatz', sans-serif !important;
 }

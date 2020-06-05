@@ -19,7 +19,7 @@ const createWindow = () => {
             nodeIntegration: true
         },
         width: 1200,
-        height: 600,
+        height: 680,
         // frame: false,
         backgroundColor: "#ffffff",
         icon: path.join(__dirname, "public/images/logo.png")
