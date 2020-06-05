@@ -1,7 +1,7 @@
 ## Watch All Movies Safely
 ### A family-friendly movie player which have the ability to skip any bad scenes in the movie.
 
-
+![Preview](https://github.com/omarrhanyy/safe-movie-player/raw/master/dist/screenshot.png)
 
 ### How to use
 
