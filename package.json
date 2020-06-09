@@ -9,6 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron src/index.js",
     "dist": "electron-builder",
+	"dist-32-64": "electron-builder --ia32 --x64 -w",
     "dist-all": "electron-builder -mwl",
     "dist-mac": "electron-builder build --mac --publish always",
     "dist-linux": "electron-builder --linux"
