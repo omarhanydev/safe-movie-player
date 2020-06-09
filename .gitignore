@@ -1,5 +1,6 @@
 # Unpacked folders
 dist/win-unpacked
+dist/win-ia32-unpacked
 dist/linux-unpacked
 dist/mac
 dist/mac-unpacked
