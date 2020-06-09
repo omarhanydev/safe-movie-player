@@ -1,8 +1,8 @@
 version: 1.0.1
 files:
   - url: Safe-Movie-Player-Setup-1.0.1.exe
-    sha512: 0ZSmjm3FW1pjKvFVxoDh72C+x/yKvwNPkgC545m1q4+mxt0ccOKnlGbYdUB62jy1eghP5eCRU1vlF+IddJHmFA==
-    size: 50717772
+    sha512: nbrHzUOvlq++y+ULB/ldcOl7JeQZIpdEAuLlQ4AbFoby2krmPfyo1kuGrOGVnqOjEmeWy6qmDtMrifh5R/9j2A==
+    size: 98760838
 path: Safe-Movie-Player-Setup-1.0.1.exe
-sha512: 0ZSmjm3FW1pjKvFVxoDh72C+x/yKvwNPkgC545m1q4+mxt0ccOKnlGbYdUB62jy1eghP5eCRU1vlF+IddJHmFA==
-releaseDate: '2020-06-05T20:57:06.021Z'
+sha512: nbrHzUOvlq++y+ULB/ldcOl7JeQZIpdEAuLlQ4AbFoby2krmPfyo1kuGrOGVnqOjEmeWy6qmDtMrifh5R/9j2A==
+releaseDate: '2020-06-09T14:25:20.206Z'
