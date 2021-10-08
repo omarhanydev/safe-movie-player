@@ -54,6 +54,45 @@
                 <button class="btn uk-button uk-button-secondary uk-button-large" uk-tooltip="title: Play a Movie with .srt subtitle file and .safe file or using Auto Cut Scenes feature; pos: bottom" id="selectBtn" type="button"><span uk-icon="icon: play-circle; ratio: 1.5"></span> Play Movie</button>
             </div>
 
+            <!-- <div class="tfjs-example-container">
+                <section class='title-area'>
+                  <h1>TensorFlow.js: Using a pretrained NsfwNet</h1>
+                </section>
+            
+                <section>
+                  <p class='section-head'>Description</p>
+                  <p>
+                    This demo uses the pretrained Nsfw model implemented with Tensorflow from repo which you can find
+                    <a href="https://github.com/MaybeShewill-CV/nsfw-classification-tensorflow">here</a>.
+                    A pretrained model weights can be found
+                    <a href="https://github.com/MaybeShewill-CV/nsfw-classification-tensorflow/tree/master/model">here</a>
+            
+                    It is trained to identify if a image is suitable for watching. You can see all the objects types it
+                    has been trained to recognize in <a href="nsfw_classess.js">nsfw_classes.js</a>.
+                  </p>
+                </section>
+            
+                <section>
+                  <p class='section-head'>Status</p>
+                  <div id="status"></div>
+                </section>
+            
+                <section>
+                  <p class='section-head'>Model Output</p>
+            
+                  <div id="file-container" style="display: none">
+                    Upload an image: <input type="file" id="files" name="files[]" multiple />
+                  </div>
+            
+                  <div id="predictions"></div>
+            
+                  <img style="display: none" id="test_draw" src="../public/images/logo.svg" width=256 height=256 />
+                </section>
+            
+                <!-- <script src="../public/tfjs.js"> </script> -->
+                <!-- <script src="../public/test.js"></script> -->
+              <!-- </div> -->
+
             <div id="addNewCuts" class="uk-modal-full" uk-modal>
                 <div class="uk-modal-dialog">
                     <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
@@ -74,7 +113,7 @@
 
 </div>
 
-
+<script src="../public/tfjs.js"> </script>
 <script src="../public/nude.min.js"></script>
 <script src="../public/functions.js"></script>
 

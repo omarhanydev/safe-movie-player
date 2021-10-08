@@ -12,6 +12,55 @@ let fileNameOld, fileName, pos;
 let autoCut;
 let autoCutSens;
 
+const NSFWNET_MODEL_PATH ='../public/model/tensorflowjs_model.pb';
+const NSFWNET_WEIGHTS_PATH ='../public/model/weights_manifest.json';
+
+const IMAGE_SIZE = 256;
+const IMAGE_CROP_SIZE = 224;
+const TOPK_PREDICTIONS = 5;
+
+const NSFW_CLASSES = {
+  0: 'drawing',
+  1: 'hentai',
+  2: 'neural',
+  3: 'porn',
+  4: 'sexy',
+};
+
+let nsfwnet;
+const nsfwnetDemo = async () => {
+  console.log('Loading model...');
+
+  // nsfwnet = await tf.loadModel(MOBILENET_MODEL_PATH);
+  nsfwnet = await tf.loadGraphModel(NSFWNET_MODEL_PATH, NSFWNET_WEIGHTS_PATH);
+
+  // Warmup the model. This isn't necessary, but makes the first prediction
+  // faster. Call `dispose` to release the WebGL memory allocated for the return
+  // value of `predict`.
+  nsfwnet.predict(tf.zeros([1, IMAGE_CROP_SIZE, IMAGE_CROP_SIZE, 3])).dispose();
+
+  console.log('Model Warm complete');
+
+  // Make a prediction through the locally hosted test_draw.jpg.
+//   const image_Element = document.getElementById('test_draw');
+//   if (image_Element.complete && image_Element.naturalHeight !== 0) {
+
+//     predict(image_Element);
+//     image_Element.style.display = '';
+//   } else {
+
+//     image_Element.onload = () => {
+//       predict(image_Element);
+//       image_Element.style.display = '';
+//     }
+//   }
+
+//   document.getElementById('file-container').style.display = '';
+};
+
+nsfwnetDemo();
+
+
 function hmsToSecondsOnly(str) {
     var p = str.split(':'),
         s = 0, m = 1;
@@ -21,6 +70,10 @@ function hmsToSecondsOnly(str) {
         m *= 60;
     }
     return s;
+}
+
+function secToHms(str) {
+    return new Date(str * 1000).toISOString().substr(11, 8)
 }
 
 function tableToJson(table) {
@@ -97,6 +150,124 @@ function readTextFile(file, callback) {
     rawFile.send(null);
 }
 
+function captureVideo(v) {
+    video = document.getElementById('player');
+    var canvas = document.createElement('canvas');
+    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    var img = new Image();
+    img.src = canvas.toDataURL();
+    img.height = video.videoHeight;
+    img.width = video.videoWidth;
+    return img;
+}
+
+async function predict(imgElement) {
+//   console.log('Predicting...');
+
+  const startTime = performance.now();
+  const logits = tf.tidy(() => {
+
+    // tf.fromPixels() returns a Tensor from an image element.
+    const img = tf.browser.fromPixels(imgElement).toFloat();
+    const crop_image = tf.slice(img, [16, 16, 0], [224, 224, -1]);
+    const img_reshape = tf.reverse(crop_image, [-1]);
+
+    let imagenet_mean = tf.expandDims([103.94, 116.78, 123.68], 0);
+    imagenet_mean = tf.expandDims(imagenet_mean, 0);
+
+    // Normalize the image from [0, 255] to [-1, 1].
+    const normalized = img_reshape.sub(imagenet_mean);
+
+    // Reshape to a single-element batch so we can pass it to predict.
+    const batched = normalized.reshape([1, IMAGE_CROP_SIZE, IMAGE_CROP_SIZE, 3]);
+
+    // Make a prediction through mobilenet.
+    return nsfwnet.predict(batched);
+  });
+
+  // Convert logits to probabilities and class names.
+  const classes = await getTopKClasses(logits, TOPK_PREDICTIONS);
+  const totalTime = performance.now() - startTime;
+//   console.log(`Done in ${Math.floor(totalTime)}ms`);
+
+  // Show the classes in the DOM.
+//   console.log(imgElement, classes);
+  return classes;
+}
+async function extractFramesFromVideo(videoUrl, fps=0.5) {
+    return new Promise(async (resolve) => {
+        console.log('Extracting frames from video...');
+  
+      // fully download it first (no buffering):
+      let videoBlob = await fetch(videoUrl).then(r => r.blob());
+      let videoObjectUrl = URL.createObjectURL(videoBlob);
+      let video = document.createElement("video");
+  
+      let seekResolve;
+      video.addEventListener('seeked', async function() {
+        if(seekResolve) seekResolve();
+      });
+  
+      video.src = videoObjectUrl;
+  
+      // workaround chromium metadata bug (https://stackoverflow.com/q/38062864/993683)
+      while((video.duration === Infinity || isNaN(video.duration)) && video.readyState < 2) {
+        await new Promise(r => setTimeout(r, 1000));
+        video.currentTime = 10000000*Math.random();
+      }
+      let duration = video.duration;
+  
+      let canvas = document.createElement('canvas');
+      let context = canvas.getContext('2d');
+      let [w, h] = [video.videoWidth, video.videoHeight]
+      canvas.width =  w;
+      canvas.height = h;
+  
+      let frames = [];
+      let interval = 1 / fps;
+      let currentTime = 0;
+  
+      while(currentTime < duration) {
+        video.currentTime = currentTime;
+        await new Promise(r => seekResolve=r);
+  
+        context.drawImage(video, 0, 0, w, h);
+        let base64ImageData = canvas.toDataURL();
+        frames.push({img: base64ImageData, time: currentTime});
+        console.log(video.currentTime);
+        currentTime += interval;
+      }
+      console.log('done frames from video...');
+      resolve(frames);
+    });
+  }
+
+async function getTopKClasses(logits, topK) {
+    const values = await logits.data();
+  
+    const valuesAndIndices = [];
+    for (let i = 0; i < values.length; i++) {
+      valuesAndIndices.push({value: values[i], index: i});
+    }
+    valuesAndIndices.sort((a, b) => {
+      return b.value - a.value;
+    });
+    const topkValues = new Float32Array(topK);
+    const topkIndices = new Int32Array(topK);
+    for (let i = 0; i < topK; i++) {
+      topkValues[i] = valuesAndIndices[i].value;
+      topkIndices[i] = valuesAndIndices[i].index;
+    }
+  
+    const topClassesAndProbs = {};
+    for (let i = 0; i < topkIndices.length; i++) {
+      topClassesAndProbs[NSFW_CLASSES[topkIndices[i]]] = topkValues[i];
+    }
+    return topClassesAndProbs;
+  }
 
 document.getElementById('autoCutCheckbox').addEventListener('change', function (event) {
     if(document.getElementById('autoCutCheckbox').checked){
@@ -113,6 +284,31 @@ document.querySelector('#selectBtn').addEventListener('click', function (event) 
             extensions: ['mkv', 'avi', 'mp4', 'mov', 'm4v', 'rmvb', 'mpg', 'mpeg']}]
     }).then((data) => {
         vidUrl = data.filePaths[0];
+        // extractFramesFromVideo(vidUrl).then(frames => {
+        //     console.log(frames);
+        //     // let video = document.getElementById('player');
+        //     let w = 1920;
+        //     let h = 1080;
+        //     frames.forEach(frameObj => {
+        //         var img = document.createElement('img');
+
+        //         img.src = frameObj.img;
+        //         img.height = w;
+        //         img.width = h;
+        //         // document.body.appendChild(img);
+        //         img.onload = function() {
+        //             // ctx.drawImage(img, 20,20);
+        //             // predict(img);
+        //             let pred = predict(img);
+        //             pred.then(function(classes) {
+        //                 if (classes.porn > 0.3 || classes.sexy > 0.3) {
+        //                     console.log(secToHms(frameObj.time), classes.porn, classes.sexy);
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
+        // return;
         autoCut = document.getElementById('autoCutCheckbox').checked;
         autoCutSens = parseInt(document.getElementById('autoCutInput').value);
         dialog.showOpenDialog({
@@ -160,9 +356,10 @@ document.querySelector('#selectBtn').addEventListener('click', function (event) 
 
                 player.on('timeupdate', event => {
                     let instance = event.detail.plyr;
-                    nude.load('player');
-                    nude.scan(function(result){
-                        if(result){
+                    let pred = predict(captureVideo(instance.elements.original));
+                    pred.then(function(classes) {
+                        console.log(classes.porn, classes.sexy);
+                        if (classes.porn > 0.3 || classes.sexy > 0.3) {
                             if(count<=autoCutSens){
                                 count++;
                             }
@@ -182,6 +379,28 @@ document.querySelector('#selectBtn').addEventListener('click', function (event) 
                             }
                         }
                     });
+                    // nude.load('player');
+                    // nude.scan(function(result){
+                    //     if(result){
+                    //         if(count<=autoCutSens){
+                    //             count++;
+                    //         }
+                    //         if(count>autoCutSens){
+                    //             count = 0;
+                    //             instance.currentTime = instance.currentTime + 45;
+                    //             document.getElementById('player').style.opacity = "0";
+                    //             instance.volume = 0;
+                    //         }
+                    //     } else {
+                    //         if(document.getElementById('player').style.opacity === "0"){
+                    //             setTimeout(function () {
+                    //                 document.getElementById('player').style.opacity = "1";
+                    //                 instance.volume = 1;
+                    //                 count = 0;
+                    //             }, 10000);
+                    //         }
+                    //     }
+                    // });
                 });
             } else {
                 dialog.showOpenDialog({
